@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "Handwerker": {
+      "placeholders_set": 7,
+      "defaults_keys": ["status"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten-Entity für Mitarbeiter ohne Berechnungen. Status erhält Default 'aktiv'."
+    },
+    "Werkzeuge": {
+      "placeholders_set": 8,
+      "defaults_keys": ["werkzeug_status"],
+      "computed_keys": [],
+      "reason": "Inventar-Entity ohne berechenbare Felder. Status erhält Default 'verfuegbar'. Kategorie ist statisches Lookup ohne Preis-Target."
+    },
+    "Ausleihe": {
+      "placeholders_set": 8,
+      "defaults_keys": ["ausleihdatum"],
+      "computed_keys": ["_ausleihe_dauer_tage"],
+      "reason": "Transaktions-Entity mit Datumpaar (ausleihdatum/geplantes_rueckgabedatum). Virtuelle Dauer wird als Datumsdifferenz berechnet zur Dialog-Anzeige. Ausleihdatum erhält Default 'today' mit withTime:true."
+    },
+    "Wartung & Reparatur": {
+      "placeholders_set": 10,
+      "defaults_keys": ["meldedatum", "vorgang_status"],
+      "computed_keys": [],
+      "reason": "Service-Entity für Wartungs- und Reparaturvorgänge. Kosten ist reiner manueller Input ohne Faktor/Multiplikator (kein applookup mit Stundensatz). Meldedatum erhält Default 'today', Status erhält Default 'offen'."
+    }
+  }
+}

@@ -1,0 +1,39 @@
+Legend: `!` after a field name = required (from the app's base view) —
+a step form that writes such a field must not submit it empty.
+A lookup field lists its keys after the type (`[lookup/select: a|b|c]`);
+these are the ONLY valid write values — quote them into the brief verbatim,
+the matching labels come from LOOKUP_OPTIONS at runtime.
+`⚙` lists the service methods for that entity, spelled exactly.
+`✚` lists the entity's Enriched* fields and its enrich() signature,
+spelled exactly — quote both verbatim; an invented enriched field or
+a missing map is a guaranteed type error.
+
+Modules — copy these paths verbatim into a subagent brief:
+  @/types/app                            entity types, APP_IDS, LOOKUP_OPTIONS
+  @/types/enriched                       EnrichedAusleihe, EnrichedWartungReparatur — the COMPLETE list, no other Enriched* type exists
+  @/lib/enrich                           the enrich functions — exact fields and signatures on the `✚` line of each entity below; every listed map is REQUIRED, and no other enriched field exists
+  @/services/livingAppsService           LivingAppsService, createRecordUrl, extractRecordId
+  @/hooks/useDashboardData               useDashboardData — the RAW arrays (one per entity, camelCase), their setters, loading, error, fetchAll + handwerkerMap, werkzeugeMap; it carries NO enriched arrays — build those with the `✚` call below
+  @/lib/formatters                       lookupKey, formatDate
+  @/components/blocks/IntentWizardShell  IntentWizardShell
+  @/components/blocks/EntitySelectStep   EntitySelectStep
+  @/components/blocks/StatusBadge        StatusBadge, getStatusColor
+  @/components/blocks/BudgetTracker      BudgetTracker
+  @/components/blocks/AvailabilityRangePicker  AvailabilityRangePicker, rangeIsFree, isNightBlocked
+There is NO `@/config/appIds`, no `@/config/lookupOptions` and no
+`@/lib/urlUtils` — APP_IDS and LOOKUP_OPTIONS come from `@/types/app`,
+createRecordUrl from the service. Note the lowercase `l` in the service path.
+
+- Handwerker (handwerker): vorname![string/text], nachname![string/text], personalnummer[string/text], telefon[string/tel], email![string/email], abteilung[string/text], status![lookup/radio: aktiv|inaktiv]
+  ⚙ getHandwerker() · getHandwerkerEntry(id) · createHandwerkerEntry(fields) · updateHandwerkerEntry(id, fields) · deleteHandwerkerEntry(id)
+- Werkzeuge (werkzeuge): werkzeugname![string/text], inventarnummer![string/text], kategorie![lookup/select: elektrowerkzeug|messgeraet|pruefgeraet|handwerkzeug|sonstiges], hersteller[string/text], modell[string/text], kaufdatum[date/date], standort[string/text], werkzeug_status![lookup/select: verfuegbar|ausgeliehen|in_wartung|in_reparatur|ausser_betrieb], bemerkungen_werkzeug[string/textarea], foto[file]
+  ⚙ getWerkzeuge() · getWerkzeugeEntry(id) · createWerkzeugeEntry(fields) · updateWerkzeugeEntry(id, fields) · deleteWerkzeugeEntry(id)
+- Ausleihe (ausleihe): handwerker![applookup/select], werkzeug![applookup/select], ausleihdatum![date/datetimeminute], geplantes_rueckgabedatum[date/date], tatsaechliches_rueckgabedatum[date/date], zustand_ausleihe[lookup/select: einwandfrei|leichte_spuren|starke_spuren|beschaedigt], zustand_rueckgabe[lookup/select: einwandfrei_r|leichte_spuren_r|starke_spuren_r|beschaedigt_r], bemerkungen_ausleihe[string/textarea]
+  ⚙ getAusleihe() · getAusleiheEntry(id) · createAusleiheEntry(fields) · updateAusleiheEntry(id, fields) · deleteAusleiheEntry(id)
+  ✚ EnrichedAusleihe adds ONLY handwerkerName, werkzeugName — via enrichAusleihe(ausleihe, { handwerkerMap, werkzeugeMap }), all maps required
+  → handwerker links to app_id 6a87fe826c8ec89f34aa912b
+  → werkzeug links to app_id 6a87fe8737fd8fb6dc82a473
+- Wartung & Reparatur (wartung_reparatur): werkzeug_wr![applookup/select], vorgangstyp![lookup/radio: reparatur|wartung], meldedatum![date/date], geplantes_datum[date/date], abschlussdatum[date/date], beschreibung![string/textarea], durchfuehrende_stelle[lookup/radio: intern|extern], kosten[number], vorgang_status![lookup/select: offen|in_bearbeitung|abgeschlossen], bemerkungen_wartung[string/textarea]
+  ⚙ getWartungReparatur() · getWartungReparaturEntry(id) · createWartungReparaturEntry(fields) · updateWartungReparaturEntry(id, fields) · deleteWartungReparaturEntry(id)
+  ✚ EnrichedWartungReparatur adds ONLY werkzeug_wrName — via enrichWartungReparatur(wartungReparatur, { werkzeugeMap }), all maps required
+  → werkzeug_wr links to app_id 6a87fe8737fd8fb6dc82a473

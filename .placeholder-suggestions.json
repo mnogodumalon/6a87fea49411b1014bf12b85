@@ -1,0 +1,44 @@
+{
+  "HandwerkerDialog.tsx": {
+    "vorname": "z. B. Max",
+    "nachname": "z. B. Müller",
+    "personalnummer": "z. B. HW-001",
+    "telefon": "z. B. +49 30 123456",
+    "email": "z. B. max.mueller@firma.de",
+    "abteilung": "z. B. Elektrotechnik",
+    "status": "z. B. Aktiv, Inaktiv"
+  },
+  "WerkzeugeDialog.tsx": {
+    "werkzeugname": "z. B. Bohrmaschine SDS",
+    "inventarnummer": "z. B. WZ-0042",
+    "kategorie": "z. B. Elektrowerkzeug, Messgerät",
+    "hersteller": "z. B. Bosch",
+    "modell": "z. B. GBH 18V-26",
+    "kaufdatum": "Wann wurde es erworben?",
+    "standort": "z. B. Lager A, Werkstatt 2",
+    "werkzeug_status": "z. B. Verfügbar, Ausgeliehen",
+    "bemerkungen_werkzeug": "Zustand, Wartungshistorie, Besonderheiten..."
+  },
+  "AusleiheDialog.tsx": {
+    "handwerker": "Welcher Handwerker?",
+    "werkzeug": "Welches Werkzeug?",
+    "ausleihdatum": "Wann wird ausgeliehen?",
+    "geplantes_rueckgabedatum": "Wann zurück?",
+    "tatsaechliches_rueckgabedatum": "Wann tatsächlich zurück?",
+    "zustand_ausleihe": "Zustand beim Ausleihen?",
+    "zustand_rueckgabe": "Zustand bei Rückgabe?",
+    "bemerkungen_ausleihe": "Besonderheiten, Schäden, Mängel, Hinweise..."
+  },
+  "WartungReparaturDialog.tsx": {
+    "werkzeug_wr": "Welches Werkzeug?",
+    "vorgangstyp": "z. B. Reparatur, Wartung",
+    "meldedatum": "Wann wurde es gemeldet?",
+    "geplantes_datum": "Wann durchführen?",
+    "abschlussdatum": "Wann ist es fertig?",
+    "beschreibung": "Was ist das Problem? Was wurde gemacht?",
+    "durchfuehrende_stelle": "z. B. Intern, Extern",
+    "kosten": "z. B. 45,00",
+    "vorgang_status": "z. B. Offen, In Bearbeitung",
+    "bemerkungen_wartung": "Weitere Hinweise, Teile bestellt, Fremdvergabe..."
+  }
+}

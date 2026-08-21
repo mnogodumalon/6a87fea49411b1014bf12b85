@@ -1,0 +1,36 @@
+{
+  "pages": {
+    "en": {
+      "Abschließen": "Complete",
+      "Aktive Ausleihen": "Active Checkouts",
+      "Alle Werkzeuge verfügbar.": "All tools available.",
+      "Ausgeliehen": "Checked Out",
+      "In Bearbeitung setzen": "Set In Progress",
+      "In Wartung/Reparatur": "In Maintenance/Repair",
+      "Kein offener Wartungs- oder Reparaturbedarf": "No open maintenance or repair needs",
+      "Keine aktiven Ausleihen — alle Werkzeuge verfügbar": "No active checkouts — all tools available",
+      "Neue Ausleihe": "New Checkout",
+      "Rückgabe erfassen": "Record Return",
+      "Starten": "Start",
+      "Unbekanntes Werkzeug": "Unknown Tool",
+      "Unbenannt": "Unnamed",
+      "Verfügbar": "Available",
+      "Vorgang": "Operation",
+      "Vorgang melden": "Report Issue",
+      "Wartung & Reparatur": "Maintenance & Repair",
+      "Werkzeugbestand im Überblick.": "Tool inventory at a glance.",
+      "Zurzeit ausgeliehen: {0}.": "Currently checked out: {0}.",
+      "Zurück": "Back",
+      "Zurückgegeben": "Returned",
+      "bei {0}": "at {0}",
+      "geplante Rückgabe": "scheduled return",
+      "{0} — Werkzeug überfällig zurück.": "{0} — Tool overdue for return.",
+      "{0} — abgeschlossen": "{0} — completed",
+      "{0} — in Bearbeitung": "{0} — in progress",
+      "{0} — zurückgegeben": "{0} — returned",
+      "Überfällig": "Overdue",
+      "überfällig": "overdue"
+    }
+  },
+  "v": 1
+}
