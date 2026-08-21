@@ -126,9 +126,15 @@ Layout — pick the shell mode by page type:
   FAR too narrow for hero sections and card grids. With `fullBleed`, build
   full-width bands and give each section its own inner container
   (`max-w-5xl mx-auto px-4`).
-- Pages that compose their own surfaces in the column (several separate
-  cards, a wizard with its own framing): add `plain` to opt out of the
-  shell's card.
+- Wizards (`IntentWizardShell`) render INSIDE the shell's card like any
+  other column content — the stepper is compact and centered, it fits.
+  Never pass `plain` for a wizard: a live pair of dashboards shipped the
+  same 0.0.331 shell, but the wizard page opted out and looked like a
+  different product next to the carded form.
+- `plain` (opt out of the shell's card) is a rare escape hatch for a page
+  that genuinely composes several SEPARATE top-level surfaces. It
+  sacrifices the standardized hosted look — when in doubt, stay in the
+  card and separate sections inside it (spacing, borders).
 
 Wrong: a landing page inside `wide` — the 672px column crushes a 3-column
 card grid into ~200px cards and truncates every course name and time.

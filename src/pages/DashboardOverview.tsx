@@ -8,20 +8,21 @@ import { WorkList } from '@/components/WorkList';
 import { StatStrip, StatStripItem } from '@/components/StatCard';
 import { KanbanWidget } from '@/components/widgets/KanbanWidget';
 import type { KanbanCard, KanbanColumn } from '@/components/widgets/KanbanWidget';
-import { tx, appLabel } from '@/i18n';
+import { tx, appLabel, dateFnsLocale } from '@/i18n';
 import { useClock, gruss, namen, undoToast } from '@/lib/polish';
 import { formatDate } from '@/lib/formatters';
 import { lookupOption, LOOKUP_OPTIONS } from '@/types/app';
 import { lookupKey } from '@/lib/formatters';
 import { LivingAppsService } from '@/services/livingAppsService';
 import { extractRecordId } from '@/services/livingAppsService';
-import { format, isAfter, isBefore, parseISO, startOfDay } from 'date-fns';
+import { differenceInCalendarDays, format, isAfter, isBefore, parseISO, startOfDay } from 'date-fns';
 import {
   IconAlertTriangle,
   IconTool,
   IconCircleCheck,
   IconArrowBack,
 } from '@tabler/icons-react';
+import { ResourceTimeline, type ResourceEvent, type ResourceGroup, type ResourceTone } from '@/components/widgets/ResourceTimeline';
 
 export default function DashboardOverview() {
   const data = useDashboardData();
@@ -33,6 +34,8 @@ export default function DashboardOverview() {
   } = data;
 
   const clock = useClock();
+  const today = startOfDay(clock);
+  const todayStr = format(clock, 'yyyy-MM-dd');
   const [filterKey, setFilterKey] = useState<string | null>(null);
 
   const crud = useEntityCrud(data, {
@@ -115,12 +118,59 @@ export default function DashboardOverview() {
     })
   , [filteredWerkzeuge, activeLoansAll]);
 
+  // ─── ResourceTimeline: ausgeliehene Werkzeuge als Zeilen, nach Rückgabedatum sortiert ─
+  const loanGroups = useMemo((): ResourceGroup[] => {
+    const seen = new Set<string>();
+    return [...activeLoansAll]
+      .filter(a => {
+        const wid = extractRecordId(a.fields.werkzeug);
+        if (!wid || seen.has(wid)) return false;
+        seen.add(wid);
+        return true;
+      })
+      .sort((a, b) => {
+        const aDate = a.fields.geplantes_rueckgabedatum;
+        const bDate = b.fields.geplantes_rueckgabedatum;
+        const aDist = aDate ? Math.abs(differenceInCalendarDays(parseISO(aDate), today)) : Infinity;
+        const bDist = bDate ? Math.abs(differenceInCalendarDays(parseISO(bDate), today)) : Infinity;
+        return aDist - bDist;
+      })
+      .map(a => ({
+        key: extractRecordId(a.fields.werkzeug) ?? a.record_id,
+        label: a.werkzeugName ?? tx('Unbekanntes Werkzeug'),
+      }));
+  }, [activeLoansAll, today]);
+
+  const loanEvents = useMemo((): ResourceEvent[] =>
+    activeLoansAll
+      .filter(a => !!a.fields.ausleihdatum && !!extractRecordId(a.fields.werkzeug))
+      .map(a => {
+        const wid = extractRecordId(a.fields.werkzeug) ?? '';
+        const returnDate = a.fields.geplantes_rueckgabedatum;
+        const daysLeft = returnDate
+          ? differenceInCalendarDays(parseISO(returnDate), today)
+          : null;
+        const tone: ResourceTone =
+          daysLeft !== null && daysLeft < 0 ? 'destructive' :
+          daysLeft !== null && daysLeft <= 2 ? 'warning' :
+          'primary';
+        return {
+          id: `ausleihe:${a.record_id}`,
+          start: a.fields.ausleihdatum!.slice(0, 10),
+          end: returnDate ?? todayStr,
+          allDay: true,
+          title: a.handwerkerName ?? tx('Handwerker'),
+          subtitle: returnDate ? formatDate(returnDate) : undefined,
+          tone,
+          group: wid,
+        };
+      })
+  , [activeLoansAll, today, todayStr]);
+
   if (loading) return <DashboardSkeleton />;
   if (error) return <DashboardError error={error} onRetry={fetchAll} />;
 
   // ─── Plain derivations below ─────────────────────────────────────────────
-  const today = startOfDay(clock);
-  const todayStr = format(clock, 'yyyy-MM-dd');
 
   // Active loans (alias for JSX usage)
   const activeLoans = activeLoansAll;
@@ -442,6 +492,35 @@ export default function DashboardOverview() {
           </>
         }
       />
+
+      {loanGroups.length > 0 && (
+        <ResourceTimeline
+          events={loanEvents}
+          groups={loanGroups}
+          axis="day"
+          defaultRange="week"
+          defaultDate={clock}
+          locale={dateFnsLocale()}
+          onEventClick={ev => {
+            const id = ev.id.split(':')[1] ?? '';
+            const a = enrichedAusleihe.find(x => x.record_id === id);
+            if (a) crud.ausleihe.openDetail(a);
+          }}
+          onRangeCreate={(start, end, group) => {
+            crud.ausleihe.openCreate({
+              werkzeug: group,
+              ausleihdatum: format(start, "yyyy-MM-dd'T'HH:mm"),
+              geplantes_rueckgabedatum: format(end, 'yyyy-MM-dd'),
+            });
+          }}
+          onEmptyClick={(date, group) => {
+            crud.ausleihe.openCreate({
+              werkzeug: group,
+              ausleihdatum: format(date, "yyyy-MM-dd'T'HH:mm"),
+            });
+          }}
+        />
+      )}
 
       {crud.surfaces}
     </div>

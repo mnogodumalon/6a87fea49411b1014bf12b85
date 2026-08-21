@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "flows": [],
+  "unregistered_pages": [
+    {
+      "file": "src/pages/intents/WartungMeldenPage.tsx",
+      "summary": "/**\n * Wartung melden — 2-Schritt-Wizard.\n * Steps: 1) Werkzeug wählen → 2) Vorgang erfassen & speichern.\n * Reads: werkzeuge. Writes: wartung_reparatur (createWartungReparaturEntry),\n *        werkzeuge (updateWerkzeugeEntry — setzt werkzeug_status auf in_wartung / in_reparatur).\n * Composes: IntentWizardShell, EntitySelectStep.\n */",
+      "components": [
+        "Button",
+        "EntitySelectStep",
+        "Input",
+        "IntentWizardShell",
+        "Label",
+        "StatusBadge",
+        "Textarea"
+      ],
+      "writes": [
+        "createWartungReparaturEntry",
+        "updateWerkzeugeEntry"
+      ]
+    },
+    {
+      "file": "src/pages/intents/WerkzeugAusleihenPage.tsx",
+      "summary": "/**\n * Werkzeug Ausleihen — 3-Schritt-Wizard.\n * Steps: 1) Verfügbares Werkzeug wählen → 2) Aktiven Handwerker wählen → 3) Ausleihe bestätigen & anlegen.\n * Reads: werkzeuge (gefiltert auf verfuegbar), handwerker (gefiltert auf aktiv).\n * Writes: ausleihe (createAusleiheEntry), werkzeuge (updateWerkzeugeEntry → status 'ausgeliehen').\n * Composes: IntentWizardShell, EntitySelectStep.\n */",
+      "components": [
+        "Button",
+        "EntitySelectStep",
+        "Input",
+        "IntentWizardShell",
+        "Label",
+        "Select",
+        "SelectContent",
+        "SelectItem",
+        "SelectTrigger",
+        "SelectValue",
+        "StatusBadge",
+        "Textarea"
+      ],
+      "writes": [
+        "createAusleiheEntry",
+        "updateWerkzeugeEntry"
+      ]
+    },
+    {
+      "file": "src/pages/intents/WerkzeugRueckgabePage.tsx",
+      "summary": "/**\n * Werkzeug-Rückgabe — 2-Schritt-Wizard.\n * Steps: 1) Offene Ausleihe wählen → 2) Rückgabe erfassen & Werkzeugstatus aktualisieren.\n * Reads: ausleihe, handwerker, werkzeuge. Writes: ausleihe (updateAusleiheEntry), werkzeuge (updateWerkzeugeEntry).\n * Composes: IntentWizardShell, EntitySelectStep.\n */",
+      "components": [
+        "Button",
+        "EntitySelectStep",
+        "Input",
+        "IntentWizardShell",
+        "Label",
+        "Select",
+        "SelectContent",
+        "SelectItem",
+        "SelectTrigger",
+        "SelectValue",
+        "Textarea"
+      ],
+      "writes": [
+        "updateAusleiheEntry",
+        "updateWerkzeugeEntry"
+      ]
+    }
+  ]
+}
